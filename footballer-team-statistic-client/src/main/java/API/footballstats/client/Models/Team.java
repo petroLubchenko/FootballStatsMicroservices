@@ -1,0 +1,99 @@
+package API.footballstats.client.Models;
+
+import java.util.Objects;
+
+public class Team {
+    private long id;
+    private String name;
+    private int seasonscount;
+    private String city;
+    private String stadiumname;
+
+    public Team(){
+        super();
+    }
+
+    public Team(String name, String city){
+        this.name = name;
+        this.city = city;
+        this.seasonscount = 0;
+        this.stadiumname = null;
+    }
+
+    public Team(String name, String city, String stadiumname, int seasonscount){
+        this.name = name;
+        this.city = city;
+        this.stadiumname = stadiumname;
+        this.seasonscount = seasonscount;
+    }
+
+    public Team(long id, String name, String city, String stadiumname, int seasonscount){
+        this.id = id;
+        this.name = name;
+        this.city = city;
+        this.stadiumname = stadiumname;
+        this.seasonscount = seasonscount;
+    }
+
+
+    public boolean isValid(boolean checkId){
+        if (checkId && id != 0L)
+            return true;
+        if (name != null && stadiumname != null)
+            return true;
+        return false;
+    }
+
+    @Override
+    public boolean equals(Object object){
+        if (object != null)
+            if (object instanceof Team)
+                return this.id == ((Team) object).id && Objects.equals(this.name, ((Team) object).name) &&
+                        Objects.equals(this.city, ((Team) object).city) && Objects.equals(this.stadiumname, ((Team) object).stadiumname) &&
+                        Objects.equals(this.seasonscount, ((Team) object).seasonscount);
+
+        return false;
+    }
+
+
+    public long getId() {
+        return id;
+    }
+
+    public int getSeasonscount() {
+        return seasonscount;
+    }
+
+    public String getCity() {
+        return city;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getStadiumname() {
+        return stadiumname;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setSeasonscount(int seasonscount) {
+        this.seasonscount = seasonscount;
+    }
+
+    public void setStadiumname(String stadiumname) {
+        this.stadiumname = stadiumname;
+    }
+
+}

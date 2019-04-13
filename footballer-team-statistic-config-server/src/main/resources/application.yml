@@ -1,0 +1,27 @@
+spring:
+  cloud:
+    config:
+      server:
+        git:
+          uri: 'https://github.com/petroLubchenko/football-stat-config-reposity'
+          clone-on-start: true
+          search-paths: '/config'
+        native:
+          search-locations: D:/Admin/Documents/football-stat-config-reposity/config
+  profiles:
+    active: git
+
+
+eureka:
+  client:
+    enabled: true
+    registry-fetch-interval-seconds: 10
+    initial-instance-info-replication-interval-seconds: 10
+    service-url:
+      default-zone: 'http://localhost:8761/eureka/'
+  instance:
+    lease-renewal-interval-in-seconds: 10
+    lease-expiration-duration-in-seconds: 20
+
+server:
+  port: 0
