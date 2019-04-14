@@ -35,6 +35,8 @@ dependencyManagement {
 }
 
 dependencies {
+    // https://mvnrepository.com/artifact/org.springframework.cloud/spring-cloud-starter-bus-kafka
+    runtime group: 'org.springframework.cloud', name: 'spring-cloud-starter-bus-kafka', version: '2.1.1.RELEASE'
     compile('org.springframework.cloud:spring-cloud-starter-config')
     compile("org.springframework.boot:spring-boot-starter-web")
     compile('org.springframework.cloud:spring-cloud-starter-netflix-eureka-server')
