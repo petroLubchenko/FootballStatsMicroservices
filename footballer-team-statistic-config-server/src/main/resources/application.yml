@@ -1,4 +1,6 @@
 spring:
+  application:
+    name: 'config-server'
   cloud:
     config:
       server:
@@ -8,8 +10,13 @@ spring:
           search-paths: '/config'
         native:
           search-locations: D:/Admin/Documents/football-stat-config-reposity/config
+    stream:
+      kafka:
+        binder:
+          brokers: localhost:9092
   profiles:
     active: git
+
 
 
 eureka:
