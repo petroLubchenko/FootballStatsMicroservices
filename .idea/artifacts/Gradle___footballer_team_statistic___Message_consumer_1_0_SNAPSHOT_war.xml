@@ -1,0 +1,11 @@
+<component name="ArtifactManager">
+  <artifact type="war" name="Gradle : footballer-team-statistic : Message-consumer-1.0-SNAPSHOT.war">
+    <output-path>$PROJECT_DIR$/Message-consumer/build/libs</output-path>
+    <properties id="gradle-properties">
+      <options external-project-path="$PROJECT_DIR$/Message-consumer" />
+    </properties>
+    <root id="archive" name="Message-consumer-1.0-SNAPSHOT.war">
+      <element id="artifact" artifact-name="Gradle : footballer-team-statistic : Message-consumer-1.0-SNAPSHOT.war (exploded)" />
+    </root>
+  </artifact>
+</component>

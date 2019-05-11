@@ -1,5 +1,9 @@
 package API.footballstats.client.Models;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+
 import java.util.Objects;
 
 public class Team {
@@ -55,6 +59,19 @@ public class Team {
         return false;
     }
 
+    @Override
+    public String toString(){
+        String jsonString = "";
+        ObjectMapper mapper = new ObjectMapper();
+        try {
+            mapper.enable(SerializationFeature.INDENT_OUTPUT);
+            jsonString = mapper.writeValueAsString(this);
+        }
+        catch (JsonProcessingException ex){
+            ex.printStackTrace();
+        }
+        return jsonString;
+    }
 
     public long getId() {
         return id;
