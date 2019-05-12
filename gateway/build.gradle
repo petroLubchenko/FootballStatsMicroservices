@@ -35,10 +35,8 @@ dependencyManagement {
 }
 
 dependencies {
-    // https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-core
-    compile group: 'com.fasterxml.jackson.core', name: 'jackson-core', version: '2.9.8'
-    // https://mvnrepository.com/artifact/org.apache.kafka/kafka-clients
-    compile group: 'org.apache.kafka', name: 'kafka-clients', version: '2.2.0'
+    // https://mvnrepository.com/artifact/org.springframework.cloud/spring-cloud-starter-netflix-zuul
+    compile group: 'org.springframework.cloud', name: 'spring-cloud-starter-netflix-zuul', version: '2.1.1.RELEASE'
     // https://mvnrepository.com/artifact/org.springframework.cloud/spring-cloud-starter-bus-kafka
     runtime group: 'org.springframework.cloud', name: 'spring-cloud-starter-bus-kafka', version: '2.1.1.RELEASE'
     compile('org.springframework.cloud:spring-cloud-starter-config')

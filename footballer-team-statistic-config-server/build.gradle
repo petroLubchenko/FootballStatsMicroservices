@@ -32,6 +32,12 @@ repositories {
 }
 
 dependencies {
+    // https://mvnrepository.com/artifact/org.springframework.cloud/spring-cloud-starter-bus-kafka
+    runtime group: 'org.springframework.cloud', name: 'spring-cloud-starter-bus-kafka'
+    // https://mvnrepository.com/artifact/org.springframework.cloud/spring-cloud-starter-sleuth
+    compile group: 'org.springframework.cloud', name: 'spring-cloud-starter-sleuth'
+    // https://mvnrepository.com/artifact/org.springframework.cloud/spring-cloud-config-monitor
+    runtime group: 'org.springframework.cloud', name: 'spring-cloud-config-monitor'
     compile('org.springframework.cloud:spring-cloud-starter-netflix-eureka-client')
     compile('org.springframework.cloud:spring-cloud-config-server')
     testCompile('org.springframework.cloud:spring-cloud-starter-eureka-server')

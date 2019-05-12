@@ -4,6 +4,8 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.sun.jersey.core.impl.provider.entity.XMLRootObjectProvider;
+import org.apache.kafka.clients.producer.KafkaProducer;
+import org.apache.kafka.clients.producer.ProducerRecord;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
@@ -27,13 +29,20 @@ import org.springframework.web.client.RestTemplate;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 
 @EnableDiscoveryClient
 @SpringBootApplication
 public class Application {
+
     public static void main(String[] args) {
         SpringApplication.run(Application.class, args);
     }
+
+    public static void sendKafkaMessage(String payload, KafkaProducer<String, String> producer, String topic){
+        producer.send(new ProducerRecord<>(topic, payload));
+    }
+
 
     @Bean
     public MetricsProperties.Web.Client client(){
@@ -43,10 +52,42 @@ public class Application {
 
 @RestController
 class ServiceInstanceRestController {
+    @Value("${kafka.topic.ftc}")
+    private String ftcTopicName;
+
+    @Value("${kafka.bootstrap.servers}")
+    private String kafkaBootstrapServers;
+
+    @Value("${zookeeper.groupId}")
+    private String zookeeperGroupId;
+
+    @Value("${zookeeper.groupId}")
+    String zookeeperHost;
+
+    KafkaProducer<String, String> producer;
+
+
     @Autowired
     private DiscoveryClient discoveryClient;
     @Autowired
     private Environment env;
+
+    @Autowired
+    public ServiceInstanceRestController(@Value("${kafka.bootstrap.servers}") String KafkaBootstrapServers){
+        Properties producerProperties = new Properties();
+
+        producerProperties.put("bootstrap.servers", KafkaBootstrapServers);
+        producerProperties.put("acks", "all");
+        producerProperties.put("retries", 0);
+        producerProperties.put("batch.size", 16384);
+        producerProperties.put("linger.ms", 1);
+        producerProperties.put("buffer.memory", 33554432);
+        producerProperties.put("key.serializer", "org.apache.kafka.common.serialization.StringSerializer");
+        producerProperties.put("value.serializer", "org.apache.kafka.common.serialization.StringSerializer");
+
+        producer = new KafkaProducer<String, String>(producerProperties);
+
+    }
 
     @RequestMapping("/{applicationName}")
     public List<ServiceInstance> serviceInstanceList(@PathVariable String applicationName) {
@@ -56,11 +97,14 @@ class ServiceInstanceRestController {
 
     @GetMapping("/")
     public String hello(@Value("${name}") String name){
+        sendKafkaMessage("calling 'Hello' method from client", producer, ftcTopicName);
         return "Hello " + name + "!";
     }
 
     @GetMapping("/inf")
     public String getProps(){
+        sendKafkaMessage("calling 'Information' method from client", producer, ftcTopicName);
+
         Map<String, Object> props = new HashMap<>();
         CompositePropertySource bootstrapProps = (CompositePropertySource) ((AbstractEnvironment) env).getPropertySources().get("bootstrapProperties");
 
@@ -77,13 +121,19 @@ class ServiceInstanceRestController {
         mapper.configure(SerializationFeature.INDENT_OUTPUT, true);
 
         try {
+            sendKafkaMessage(mapper.writeValueAsString(props), producer, ftcTopicName);
             return mapper.writeValueAsString(props);
         } catch (JsonProcessingException e) {
             e.printStackTrace();
         }
 
         return "Something gone wrong!!!";
+
     }
+    private static void sendKafkaMessage(String payload, KafkaProducer<String, String> producer, String topic){
+        producer.send(new ProducerRecord<>(topic, payload));
+    }
+
 }
 
 @Configuration
@@ -94,5 +144,7 @@ class Config{
     public RestTemplate restTemplate(){
         return new RestTemplate();
     }
+
+
 }
 
