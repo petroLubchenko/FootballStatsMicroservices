@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<module external.linked.project.id="Message-consumer:test" external.linked.project.path="$MODULE_DIR$/../../Message-consumer" external.root.project.path="$MODULE_DIR$/../../Message-consumer" external.system.id="GRADLE" external.system.module.group="footballer-team-statistic" external.system.module.type="sourceSet" external.system.module.version="1.0-SNAPSHOT" type="JAVA_MODULE" version="4">
+<module external.linked.project.id="message-consumer:test" external.linked.project.path="$MODULE_DIR$/../../message-consumer" external.root.project.path="$MODULE_DIR$/../../Message-consumer" external.system.id="GRADLE" external.system.module.group="footballer-team-statistic" external.system.module.type="sourceSet" external.system.module.version="1.0-SNAPSHOT" type="JAVA_MODULE" version="4">
   <component name="FacetManager">
     <facet type="Spring" name="Spring">
       <configuration />
@@ -14,13 +14,13 @@
   <component name="NewModuleRootManager" LANGUAGE_LEVEL="JDK_1_8">
     <output-test url="file://$MODULE_DIR$/../../Message-consumer/out/test/classes" />
     <exclude-output />
-    <content url="file://$MODULE_DIR$/../../Message-consumer/src/test">
-      <sourceFolder url="file://$MODULE_DIR$/../../Message-consumer/src/test/java" isTestSource="true" />
-      <sourceFolder url="file://$MODULE_DIR$/../../Message-consumer/src/test/resources" type="java-test-resource" />
+    <content url="file://$MODULE_DIR$/../../message-consumer/src/test">
+      <sourceFolder url="file://$MODULE_DIR$/../../message-consumer/src/test/java" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/../../message-consumer/src/test/resources" type="java-test-resource" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="module" module-name="footballer-team-statistic.Message-consumer.main" />
+    <orderEntry type="module" module-name="footballer-team-statistic.message-consumer.main" />
     <orderEntry type="library" name="Gradle: org.springframework.boot:spring-boot-starter-web:2.0.5.RELEASE" level="project" />
     <orderEntry type="library" name="Gradle: org.springframework.boot:spring-boot-starter-json:2.0.5.RELEASE" level="project" />
     <orderEntry type="library" name="Gradle: com.fasterxml.jackson.datatype:jackson-datatype-jdk8:2.9.6" level="project" />
@@ -32,8 +32,8 @@
     <orderEntry type="library" name="Gradle: org.springframework.boot:spring-boot-starter-data-jpa:2.0.5.RELEASE" level="project" />
     <orderEntry type="library" name="Gradle: junit:junit:4.12" level="project" />
     <orderEntry type="library" name="Gradle: com.github.luben:zstd-jni:1.3.8-1" level="project" />
-    <orderEntry type="library" scope="RUNTIME" name="Gradle: org.postgresql:postgresql:42.2.1" level="project" />
     <orderEntry type="library" name="Gradle: org.lz4:lz4-java:1.5.0" level="project" />
+    <orderEntry type="library" scope="RUNTIME" name="Gradle: org.postgresql:postgresql:42.2.1" level="project" />
     <orderEntry type="library" name="Gradle: org.xerial.snappy:snappy-java:1.1.7.2" level="project" />
     <orderEntry type="library" name="Gradle: org.springframework.data:spring-data-jpa:2.0.10.RELEASE" level="project" />
     <orderEntry type="library" name="Gradle: org.springframework.boot:spring-boot-starter-jdbc:2.0.5.RELEASE" level="project" />
@@ -84,5 +84,5 @@
     <orderEntry type="library" name="Gradle: ch.qos.logback:logback-core:1.2.3" level="project" />
     <orderEntry type="library" name="Gradle: org.apache.logging.log4j:log4j-api:2.10.0" level="project" />
   </component>
-  <component name="TestModuleProperties" production-module="footballer-team-statistic.Message-consumer.main" />
+  <component name="TestModuleProperties" production-module="footballer-team-statistic.message-consumer.main" />
 </module>

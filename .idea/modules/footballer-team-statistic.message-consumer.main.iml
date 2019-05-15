@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<module external.linked.project.id="Message-consumer:main" external.linked.project.path="$MODULE_DIR$/../../Message-consumer" external.root.project.path="$MODULE_DIR$/../../Message-consumer" external.system.id="GRADLE" external.system.module.group="footballer-team-statistic" external.system.module.type="sourceSet" external.system.module.version="1.0-SNAPSHOT" type="JAVA_MODULE" version="4">
+<module external.linked.project.id="message-consumer:main" external.linked.project.path="$MODULE_DIR$/../../message-consumer" external.root.project.path="$MODULE_DIR$/../../Message-consumer" external.system.id="GRADLE" external.system.module.group="footballer-team-statistic" external.system.module.type="sourceSet" external.system.module.version="1.0-SNAPSHOT" type="JAVA_MODULE" version="4">
   <component name="FacetManager">
     <facet type="Spring" name="Spring">
       <configuration />
     </facet>
-    <facet type="web" name="Web Gradle : Message-consumer-1.0-SNAPSHOT.war">
+    <facet type="web" name="Web Gradle : message-consumer-1.0-SNAPSHOT.war">
       <configuration>
         <webroots>
-          <root url="file://D:\Admin\Documents\Java Labs\FootballStatsMicroservices\Message-consumer\src\main\webapp" relative="/" />
+          <root url="file://D:\Admin\Documents\Java Labs\FootballStatsMicroservices\message-consumer\src\main\webapp" relative="/" />
         </webroots>
       </configuration>
     </facet>
@@ -15,9 +15,9 @@
   <component name="NewModuleRootManager" LANGUAGE_LEVEL="JDK_1_8">
     <output url="file://$MODULE_DIR$/../../Message-consumer/out/production/classes" />
     <exclude-output />
-    <content url="file://$MODULE_DIR$/../../Message-consumer/src/main">
-      <sourceFolder url="file://$MODULE_DIR$/../../Message-consumer/src/main/java" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/../../Message-consumer/src/main/resources" type="java-resource" />
+    <content url="file://$MODULE_DIR$/../../message-consumer/src/main">
+      <sourceFolder url="file://$MODULE_DIR$/../../message-consumer/src/main/java" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/../../message-consumer/src/main/resources" type="java-resource" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />

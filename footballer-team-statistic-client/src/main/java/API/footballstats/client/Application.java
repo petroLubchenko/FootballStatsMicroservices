@@ -139,7 +139,7 @@ class ServiceInstanceRestController {
 @Configuration
 class Config{
 
-    @LoadBalanced
+    //@LoadBalanced
     @Bean
     public RestTemplate restTemplate(){
         return new RestTemplate();

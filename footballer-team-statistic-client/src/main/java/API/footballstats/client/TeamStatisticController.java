@@ -59,7 +59,7 @@ public class TeamStatisticController {
 
     }
 
-    private String url = "http://footballer-team-server/teams/";
+    private String url = "http://tfcservice:8100/teams/";
 
     @GetMapping("/all")
     public List getAll() throws IOException {
