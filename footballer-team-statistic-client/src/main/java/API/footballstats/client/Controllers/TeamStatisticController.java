@@ -1,5 +1,6 @@
-package API.footballstats.client;
+package API.footballstats.client.Controllers;
 
+import API.footballstats.client.Application;
 import API.footballstats.client.Exceptions.EntityNotFoundException;
 import API.footballstats.client.Exceptions.InadmissiblefieldsException;
 import API.footballstats.client.Exceptions.InternalServerErrorException;
@@ -9,13 +10,18 @@ import API.footballstats.client.Models.Team;
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.cloud.client.discovery.DiscoveryClient;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.*;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.HttpServerErrorException;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.servlet.ModelAndView;
 
 import javax.ws.rs.POST;
 import java.io.IOException;
@@ -25,8 +31,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
+@Controller(value = "Teamstatcontr")
 @RequestMapping("/teams")
-@RestController
+@EnableWebSecurity
 public class TeamStatisticController {
     @Value("${kafka.topic.team}")
     private String topicName;
@@ -59,24 +66,30 @@ public class TeamStatisticController {
 
     }
 
-    private String url = "http://tfcservice:8100/teams/";
+    //private String url = "http://footballer-team-service/teams/";
+    private String url = "http://services:8100/teams/";
 
     @GetMapping("/all")
-    public List getAll() throws IOException {
+    public String getAll(Model model) throws IOException {
         try {
-            List<Object> object = restTemplate.getForObject(url, List.class);
+            List<Team> object = restTemplate.getForObject(url, List.class);
             Message message = new Message("Getting all teams from database", HttpMethod.GET, HttpStatus.OK, (Team) null, "");
             Application.sendKafkaMessage(message.toString(), producer, topicName);
-            return object;
+            Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+            String name = auth.getName();
+            model.addAttribute("name", name);
+            System.out.println(object);
+            model.addAttribute("teams", object);
+            return "teamlist";
         }
         catch (IllegalStateException ex){
             IllegalStateExceptionHandler(ex);
         }
-        return null;
+        return "mainpage";
     }
 
     @GetMapping("/{id}")
-    public Object getOne(@PathVariable long id){
+    public String getOne(@PathVariable long id, Model model){
         String getoneUrl = url + id;
         try {
             Object object = restTemplate.getForObject(getoneUrl, Team.class);
@@ -88,7 +101,9 @@ public class TeamStatisticController {
                 message = new Message("Getting an object with id = " + id, HttpMethod.GET, HttpStatus.OK, (Team) null, "Received object is not a Footballer");
 
             Application.sendKafkaMessage(message.toString(), producer, topicName);
-            return object;
+
+            model.addAttribute("team", (Team)object);
+            return "team";
         }
         catch (HttpClientErrorException ex){
             HttpClientErrorExceptionHandler(ex, id, HttpMethod.GET);
@@ -100,13 +115,12 @@ public class TeamStatisticController {
         return null;
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity delete(@PathVariable long id){
+    @GetMapping("/delete/{id}")
+    public ModelAndView delete(@PathVariable long id){
         String delurl = url + id;
 
         try{
             restTemplate.delete(delurl);
-            return new ResponseEntity(HttpStatus.OK);
         }
         catch (HttpClientErrorException ex) {
             HttpClientErrorExceptionHandler(ex, id, HttpMethod.DELETE);
@@ -121,25 +135,35 @@ public class TeamStatisticController {
             throw e;
         }
 
-        return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
+        return new ModelAndView("redirect:/teams/all");
     }
 
     @PostMapping("/add")
-    public ResponseEntity create(@RequestBody Team team){
+    public ModelAndView create(@ModelAttribute Team team){
         String createUrl = url + "/add";
 
         ResponseEntity re = PostOperation(team, createUrl);
 
-        return re;
+        return new ModelAndView("redirect:/teams/all/");
     }
 
-    @PostMapping("/update")
-    public ResponseEntity update(@RequestBody Team team){
-        String updurl = url + "update";
+    @PostMapping("/update/{id}")
+    public ModelAndView update(@PathVariable long id, @ModelAttribute Team team){
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        String name = auth.getName();
 
-        ResponseEntity re = PostOperation(team, updurl);
+        String getoneUrl = url + id;
 
-        return re;
+        ModelAndView model = new ModelAndView("team");
+
+        PostOperation(team, url + "update/");
+
+        Team object = restTemplate.getForObject(getoneUrl, Team.class);
+
+        model.addObject("name", name);
+
+        model.addObject("team", object);
+        return model;
     }
 
 

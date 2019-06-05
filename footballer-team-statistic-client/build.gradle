@@ -42,11 +42,21 @@ dependencyManagement {
 }
 
 dependencies {
-    // https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-core
+// https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-tomcat
+    compile group: 'org.springframework.boot', name: 'spring-boot-starter-tomcat', version: '2.1.5.RELEASE'
+// https://mvnrepository.com/artifact/javax.servlet/jstl
+    compile group: 'javax.servlet', name: 'jstl', version: '1.2'
+// https://mvnrepository.com/artifact/org.apache.tomcat.embed/tomcat-embed-jasper
+    compile group: 'org.apache.tomcat.embed', name: 'tomcat-embed-jasper', version: '9.0.20'
+    compile('org.springframework.boot:spring-boot-starter-data-jpa')
+    runtime('org.postgresql:postgresql:42.2.1')
+// https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-jdbc
+    compile group: 'org.springframework.boot', name: 'spring-boot-starter-jdbc', version: '2.1.5.RELEASE'
+    compile("org.springframework.boot:spring-boot-starter-security")
     compile group: 'com.fasterxml.jackson.core', name: 'jackson-core', version: '2.9.8'
-    // https://mvnrepository.com/artifact/org.apache.kafka/kafka-clients
+// https://mvnrepository.com/artifact/org.apache.kafka/kafka-clients
     compile group: 'org.apache.kafka', name: 'kafka-clients', version: '2.2.0'
-    // https://mvnrepository.com/artifact/org.springframework.cloud/spring-cloud-starter-bus-kafka
+// https://mvnrepository.com/artifact/org.springframework.cloud/spring-cloud-starter-bus-kafka
     runtime group: 'org.springframework.cloud', name: 'spring-cloud-starter-bus-kafka', version: '2.1.1.RELEASE'
     compile('org.springframework.cloud:spring-cloud-starter-config')
     compile("org.springframework.boot:spring-boot-starter-web")
