@@ -1,5 +1,9 @@
 package API.footballstats.client.Models;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+
 import javax.persistence.*;
 import java.util.List;
 
@@ -7,14 +11,12 @@ public class Championship {
     private long id;
     private String name;
     private String abbreviatedname;
-    private List<Team> teams;
 
     public Championship(){}
-    public Championship(long id, String name, String abbreviatedname, List<Team> teams){
+    public Championship(long id, String name, String abbreviatedname){
         this.id = id;
         this.name = name;
         this.abbreviatedname = abbreviatedname;
-        this.teams = teams;
     }
 
     public String getName() {
@@ -25,9 +27,6 @@ public class Championship {
         return id;
     }
 
-    public List<Team> getTeams() {
-        return teams;
-    }
 
     public String getAbbreviatedname() {
         return abbreviatedname;
@@ -45,19 +44,25 @@ public class Championship {
         this.abbreviatedname = abbreviatedname;
     }
 
-    public void setTeams(List<Team> teams) {
-        this.teams = teams;
-    }
-    public void addTeam(Team team){
-        teams.add(team);
-    }
-    public  void removeTeam(Team team){
-        teams.remove(team);
-    }
 
     public boolean isValid(boolean checkId){
         if (checkId && id == 0L)
             return false;
         return !(name == null || abbreviatedname == null);
     }
+
+    @Override
+    public String toString(){
+        String jsonString = "";
+        ObjectMapper mapper = new ObjectMapper();
+        try {
+            mapper.enable(SerializationFeature.INDENT_OUTPUT);
+            jsonString = mapper.writeValueAsString(this);
+        }
+        catch (JsonProcessingException ex){
+            ex.printStackTrace();
+        }
+        return jsonString;
+    }
+
 }

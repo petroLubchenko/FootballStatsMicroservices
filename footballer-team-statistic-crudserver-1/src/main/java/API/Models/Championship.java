@@ -1,24 +1,34 @@
 package API.Models;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+
 import javax.persistence.*;
 import java.util.List;
+import java.util.Objects;
 
 @Entity(name = "championship")
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class Championship {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
     private String name;
     private String abbreviatedname;
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Team> teams;
 
     public Championship(){}
-    public Championship(long id, String name, String abbreviatedname, List<Team> teams){
+    public Championship(long id, String name, String abbreviatedname){
         this.id = id;
         this.name = name;
         this.abbreviatedname = abbreviatedname;
-        this.teams = teams;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj instanceof Championship)
+            return id == ((Championship) obj).id &&
+                    Objects.equals(name, ((Championship) obj).name) &&
+                    Objects.equals(abbreviatedname, ((Championship) obj).abbreviatedname);
+        return false;
     }
 
     public String getName() {
@@ -29,9 +39,6 @@ public class Championship {
         return id;
     }
 
-    public List<Team> getTeams() {
-        return teams;
-    }
 
     public String getAbbreviatedname() {
         return abbreviatedname;
@@ -47,16 +54,6 @@ public class Championship {
 
     public void setAbbreviatedname(String abbreviatedname) {
         this.abbreviatedname = abbreviatedname;
-    }
-
-    public void setTeams(List<Team> teams) {
-        this.teams = teams;
-    }
-    public void addTeam(Team team){
-        teams.add(team);
-    }
-    public  void removeTeam(Team team){
-        teams.remove(team);
     }
 
     public boolean isValid(boolean checkId){

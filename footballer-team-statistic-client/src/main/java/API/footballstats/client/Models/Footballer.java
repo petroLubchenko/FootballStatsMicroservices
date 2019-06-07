@@ -1,16 +1,19 @@
 package API.footballstats.client.Models;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 
 import java.util.Objects;
 
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class Footballer {
     private long id;
     private String firstname;
     private String surname;
 
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     private Team team;
 
     private int age;

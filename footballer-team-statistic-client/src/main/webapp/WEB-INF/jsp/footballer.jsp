@@ -16,7 +16,7 @@
 <head>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
     <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-    <title>Team</title>
+    <title>Footballer ${footballerobj.firstname} ${footballerobj.surname}</title>
 </head>
 <jsp:include page="menu.jsp" />
 <body>
@@ -45,24 +45,28 @@
             Age: ${footballerobj.age} <br>
             <input class="form-control"
                    value="${footballerobj.age}"
+                   type="number"
                    name="age"/>
         </div>
         <div class="card-heading p-2">
             Games: ${footballerobj.games} <br>
             <input class="form-control"
                    value="${footballerobj.games}"
+                   type="number"
                    name="games"/>
         </div>
         <div class="card-heading p-2">
             Goals: ${footballerobj.goals} <br>
             <input class="form-control"
                    value="${footballerobj.goals}"
+                   type="number"
                    name="goals"/>
         </div>
         <div class="card-heading p-2">
             Assists: ${footballerobj.assists} <br>
             <input class="form-control"
                    value="${footballerobj.assists}"
+                   type="number"
                    name="assists"/>
         </div>
         <div class="card-heading p-2">

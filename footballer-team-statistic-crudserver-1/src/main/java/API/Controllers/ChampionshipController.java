@@ -3,15 +3,20 @@ package API.Controllers;
 import API.Controllers.Exceptions.InternalServerException;
 import API.Controllers.Exceptions.NotFoundException;
 import API.Models.Championship;
+import API.Models.Team;
 import API.Services.ChampionshipService;
+import API.Services.TeamService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.ws.rs.Consumes;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static API.Controllers.ErrorHandlers.inadmissibleNullFieldHandler;
 
@@ -20,6 +25,8 @@ import static API.Controllers.ErrorHandlers.inadmissibleNullFieldHandler;
 public class ChampionshipController {
     @Autowired
     ChampionshipService championshipService;
+    @Autowired
+    TeamService ts;
 
     @GetMapping("/")
     public ResponseEntity<List<Championship>> getAll(){
@@ -73,7 +80,7 @@ public class ChampionshipController {
     }
 
     @PostMapping("/update")
-    public ResponseEntity updateFootballer(@RequestBody Championship championship){
+    public ResponseEntity update(@RequestBody Championship championship){
         System.out.println("Running \'update\' method for id = \'" + championship.getId() + "\' from FootballerController");
 
         if (championship == null)
@@ -112,4 +119,14 @@ public class ChampionshipController {
         throw new InternalServerException("Unexpected result");
     }
 
+    @GetMapping("/{id}/teams")
+    public List<Team> getTeams(@PathVariable long id){
+        List<Team> teams = ts.getAll();
+        List<Team> res = teams
+                .parallelStream()
+                .filter(f -> f.getChampionship() != null)
+                .collect(Collectors.groupingBy(Team::getChampionship))
+                .get(championshipService.getById(id));
+        return res;
+    }
 }

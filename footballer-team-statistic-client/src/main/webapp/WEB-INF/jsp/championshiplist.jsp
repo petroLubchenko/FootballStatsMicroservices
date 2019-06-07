@@ -24,12 +24,12 @@
         <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLongTitle">Add new person</h5>
+                    <h5 class="modal-title" id="exampleModalLongTitle">Add new championship</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
-                <form method="POST" action="/championships/all">
+                <form method="POST" action="/championships/add">
                     <div class="modal-body">
                         <div class="form-group">
                             <label for="name" class="col-form-label">Name:</label>
@@ -37,7 +37,7 @@
                         </div>
                         <div class="form-group">
                             <label for="abbreviatedname" class="col-form-label">Abbreviated name:</label>
-                            <input type="text" name="age" class="form-control" id="abbreviatedname">
+                            <input type="text" name="abbreviatedname" class="form-control" id="abbreviatedname">
                         </div>
                     </div>
 
@@ -55,7 +55,7 @@
         <tr>
             <th scope="col">Id</th>
             <th scope="col">Name</th>
-            <th scope="col">Short Name</th>
+            <th scope="col">Abbreviate</th>
             <th scope="col">Actions</th>
         </tr>
         </thead>
@@ -67,9 +67,9 @@
                 <td>${championship.abbreviatedname}</td>
                 <td>
                     <div>
-                        <a type="button" class="btn" href="/persons/${championship.id}" style="margin-right: 10px">Edit</a>
-                        <a type="button" class="btn" href="/persons/delete/${championship.id}" >Delete</a>
-                        <a type="button" class="btn" href="/championships/teams/${championship.id}" >Work with subjecs</a>
+                        <a type="button" class="btn" href="/championships/${championship.id}" style="margin-right: 10px">Edit</a>
+                        <a type="button" class="btn" href="/championships/delete/${championship.id}" >Delete</a>
+                        <a type="button" class="btn" href="/championships/${championship.id}/teams" >Work with subjecs</a>
                     </div>
                 </td>
             </tr>

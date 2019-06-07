@@ -80,7 +80,7 @@
                     <div>
                         <a type="button" class="btn btn-primary" href="/teams/${t.id}" style="margin-right: 10px">Edit</a>
                         <a type="button" class="btn btn-danger" href="/teams/delete/${t.id}" >Delete</a>
-                        <a type="button" class="btn" href="/teams/footballers/${t.id}" >Work with Footballers</a>
+                        <a type="button" class="btn" href="/teams/${t.id}/footballers" >Squad</a>
                     </div>
                 </td>
             </tr>

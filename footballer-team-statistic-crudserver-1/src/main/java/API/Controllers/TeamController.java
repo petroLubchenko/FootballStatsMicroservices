@@ -3,7 +3,9 @@ package API.Controllers;
 import API.Additional.Result;
 import API.Controllers.Exceptions.InternalServerException;
 import API.Controllers.Exceptions.NotFoundException;
+import API.Models.Footballer;
 import API.Models.Team;
+import API.Services.FootballerService;
 import API.Services.TeamService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -13,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static API.Controllers.ErrorHandlers.inadmissibleNullFieldHandler;
 import static API.Controllers.ErrorHandlers.notFoundHandler;
@@ -22,6 +25,8 @@ import static API.Controllers.ErrorHandlers.notFoundHandler;
 public class TeamController {
     @Autowired
     TeamService teamService;
+    @Autowired
+    FootballerService fs;
 
     @GetMapping("/")
     public ResponseEntity<List<Team>> getAll(){
@@ -39,6 +44,18 @@ public class TeamController {
 
         throw new NotFoundException(generateNotFoundMessage(id));
         //return notFoundHandler(generateNotFoundMessage(id));
+    }
+
+    @GetMapping("/{tid}/footballers")
+    public List<Footballer> getSquad(@PathVariable long tid){
+        List<Footballer> fl = fs.getAll();
+        List<Footballer> res = fl
+                .parallelStream()
+                .filter(f -> f.getTeam() != null)
+                .collect(Collectors.groupingBy(Footballer::getTeam))
+                .get(teamService.getById(tid));
+
+        return res;
     }
 
     @DeleteMapping("/{id}")

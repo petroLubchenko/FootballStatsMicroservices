@@ -12,13 +12,13 @@
 <head>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
     <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-    <title>Team</title>
+    <title>Team ${team.name}</title>
 </head>
 <jsp:include page="menu.jsp" />
 <body>
 
 <div class="row justify-content-center">
-    <h1>Person Info</h1>
+    <h1>Team ${team.name} Info</h1>
 </div>
 <div class="card mx-auto card-width">
     <form method="post" action="/teams/update/${team.id}">
@@ -50,6 +50,22 @@
             <input class="form-control"
                    name="seasonscount"
                    value="${team.seasonscount}"/>
+        </div>
+        <div class="card-heading p-2">
+            Championship:
+            <select NAME="championship">
+                <option value="=0, = , = }"></option>
+                <c:forEach var="item" items="${championships}">
+                    <c:if test="${team.championship != null && team.championship.id == item.id}">
+                        <option value="${item}" selected>
+                    </c:if>
+                    <c:if test="${team.championship == null || team.championship.id != item.id}">
+                        <option value="${item}">
+                    </c:if>
+                    <c:out value="${item.id} ${item.name} ${item.abbreviatedname}"/>
+                    </option>
+                </c:forEach>
+            </select>
         </div>
 
         <div class="card-heading p-2 mx-auto" style="max-width: 200px">

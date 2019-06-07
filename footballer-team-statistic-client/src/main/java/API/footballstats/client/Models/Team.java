@@ -1,17 +1,23 @@
 package API.footballstats.client.Models;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 
+import javax.persistence.CascadeType;
+import javax.persistence.ManyToOne;
 import java.util.Objects;
 
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class Team {
     private long id;
     private String name;
     private int seasonscount;
     private String city;
     private String stadiumname;
+
+    private Championship championship;
 
     public Team(){
         super();
@@ -93,6 +99,10 @@ public class Team {
         return stadiumname;
     }
 
+    public Championship getChampionship() {
+        return championship;
+    }
+
     public void setId(long id) {
         this.id = id;
     }
@@ -113,4 +123,7 @@ public class Team {
         this.stadiumname = stadiumname;
     }
 
+    public void setChampionship(Championship championship) {
+        this.championship = championship;
+    }
 }

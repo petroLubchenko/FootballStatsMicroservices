@@ -1,5 +1,8 @@
 package API.Models;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonSubTypes;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
@@ -11,6 +14,7 @@ import java.util.Objects;
 
 @Entity
 @Table(name = "FOOTBALLER")
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class Footballer {
 
     @Id
@@ -25,6 +29,7 @@ public class Footballer {
     @JoinColumn(name = "FOOTBALLER_TEAM")
     @ManyToOne
     @OnDelete(action = OnDeleteAction.CASCADE)
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     private Team team;
 
     @Column(name = "FOOTBALLER_AGE")

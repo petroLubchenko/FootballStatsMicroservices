@@ -31,6 +31,13 @@ public class Message {
         this.object = team == null ? "" : team.toString();
         this.error = error;
     }
+    public Message(String description, HttpMethod httpMethod, HttpStatus httpStatus, Championship championship, String error){
+        this.description = description;
+        this.httpMethod = httpMethod;
+        this.httpStatus = httpStatus.value();
+        this.object = championship == null ? "" : championship.toString();
+        this.error = error;
+    }
 
     public String getObject() {
         return object;

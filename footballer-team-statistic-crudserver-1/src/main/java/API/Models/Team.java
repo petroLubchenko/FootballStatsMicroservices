@@ -1,5 +1,9 @@
 package API.Models;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonSubTypes;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import org.hibernate.annotations.ManyToAny;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 
 import javax.persistence.*;
@@ -11,6 +15,7 @@ import java.util.Objects;
 
 @Entity
 @Table(name = "TEAM")
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class Team {
 
     @Id
@@ -26,6 +31,10 @@ public class Team {
     @Column(name = "TEAM_STADIUMNAME")
     private String stadiumname;
     private boolean deleted;
+
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    @ManyToOne(cascade = CascadeType.REMOVE, optional = true, targetEntity = Championship.class)
+    private Championship championship;
 
     public Team(){
         super();
@@ -130,5 +139,13 @@ public class Team {
     }
     public boolean getDeleted(){
         return deleted;
+    }
+
+    public Championship getChampionship() {
+        return championship;
+    }
+
+    public void setChampionship(Championship championship) {
+        this.championship = championship;
     }
 }

@@ -1,37 +1,27 @@
-package API.footballstats.client.Controllers;
+package API.footballstats.client;
 
-import API.footballstats.client.Application;
 import API.footballstats.client.Exceptions.EntityNotFoundException;
 import API.footballstats.client.Exceptions.InadmissiblefieldsException;
 import API.footballstats.client.Exceptions.InternalServerErrorException;
 import API.footballstats.client.Exceptions.ServiceIsUnavailable;
 import API.footballstats.client.Models.Footballer;
 import API.footballstats.client.Models.Message;
-import API.footballstats.client.Models.Team;
-import com.sun.jersey.core.impl.provider.entity.XMLRootObjectProvider;
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.*;
-import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.HttpServerErrorException;
 import org.springframework.web.client.RestTemplate;
-import org.springframework.web.servlet.ModelAndView;
 
 import java.io.IOException;
 import java.util.List;
 import java.util.Properties;
 
-@Controller("FootballerController")
-@RequestMapping("/footballers")
-@EnableWebSecurity
+@RestController
+@RequestMapping("/footballersfuck")
 public class FootballerStatisticController {
     @Value("${kafka.topic.footballer}")
     private String topicName;
@@ -42,7 +32,7 @@ public class FootballerStatisticController {
     @Value("${zookeeper.groupId}")
     private String zookeeperGroupId;
 
-    @Value("${zookeeper.host}")
+    @Value("${zookeeper.groupId}")
     String zookeeperHost;
 
     KafkaProducer<String, String> producer;
@@ -67,37 +57,27 @@ public class FootballerStatisticController {
 
     }
 
-    //private String url = "http://tfcservice:8100/footballers/";
-    private String url = "http://footballer-team-server:8100/footballers/";
-    private String teamurl = "http://footballer-team-server:8100/teams/";
+    private String url = "http://tfcservice:8100/footballers/";
 
     @GetMapping("/all")
-    public String getAll(Model model) throws IOException {
+    public List getAll() throws IOException {
         try {
-            List<Footballer> object = restTemplate.getForObject(url, List.class);
+            List<Object> object = restTemplate.getForObject(url, List.class);
             Message message = new Message("Getting all objects from database", HttpMethod.GET, HttpStatus.OK, (Footballer) null, "");
             Application.sendKafkaMessage(message.toString(), producer, topicName);
-            Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-            String name = auth.getName();
-
-            model.addAttribute("name", name);
-            System.out.println(object);
-            model.addAttribute("footballer", object);
-
-            return "footballerlist";
+            return object;
         }
         catch (IllegalStateException ex){
             IllegalStateExceptionHandler(ex);
         }
-        return "mainpage";
+        return null;
     }
 
     @GetMapping("/{id}")
-    public String getOne(@PathVariable long id, Model model){
+    public Object getOne(@PathVariable long id){
         String getoneUrl = url + id;
-        Footballer object = null;
         try {
-            object = restTemplate.getForObject(getoneUrl, Footballer.class);
+            Object object = restTemplate.getForObject(getoneUrl, Footballer.class);
             Message message;
 
             if (object instanceof Footballer)
@@ -106,11 +86,7 @@ public class FootballerStatisticController {
                 message = new Message("Getting an object with id = " + id, HttpMethod.GET, HttpStatus.OK, (Footballer) null, "Received object is not a Footballer");
 
             Application.sendKafkaMessage(message.toString(), producer, topicName);
-
-            model.addAttribute("footballerobj", object);
-            model.addAttribute("teams", ((List<Team>)(restTemplate.getForObject(teamurl, List.class))));
-
-            return "footballer";
+            return object;
         }
         catch (HttpClientErrorException ex){
             HttpClientErrorExceptionHandler(ex, id, HttpMethod.GET);
@@ -118,18 +94,17 @@ public class FootballerStatisticController {
         catch (IllegalStateException ex){
             IllegalStateExceptionHandler(ex);
         }
-        model.addAttribute("footballer", object);
-        model.addAttribute("teams", (List<Team>)(restTemplate.getForObject(teamurl, List.class)));
 
-        return "footballer";
+        return null;
     }
 
-    @GetMapping("/delete/{id}")
-    public ModelAndView delete(@PathVariable long id){
+    @DeleteMapping("/{id}")
+    public ResponseEntity delete(@PathVariable long id){
         String delurl = url + id;
 
         try{
             restTemplate.delete(delurl);
+            return new ResponseEntity(HttpStatus.OK);
         }
         catch (HttpClientErrorException ex) {
             HttpClientErrorExceptionHandler(ex, id, HttpMethod.DELETE);
@@ -144,49 +119,35 @@ public class FootballerStatisticController {
             throw e;
         }
 
-        return new ModelAndView("redirect:/footballers/all");
+        return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
     @PostMapping("/add")
-    public ModelAndView create(@ModelAttribute Footballer footballer){
+    public ResponseEntity create(@RequestBody Footballer footballer){
         String createUrl = url + "/add";
 
         ResponseEntity re = PostOperation(footballer, createUrl);
 
-        return new ModelAndView("redirect:/footballers/all");
+        return re;
     }
 
-    @PostMapping("/update/{id}")
-    public ModelAndView update(@PathVariable long id, @ModelAttribute Footballer footballer){
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        String name = auth.getName();
+    @PostMapping("/update")
+    public ResponseEntity update(@RequestBody Footballer footballer){
+        String updurl = url + "update";
 
-        String getoneUrl = url + id;
+        ResponseEntity re = PostOperation(footballer, updurl);
 
-        ModelAndView model = new ModelAndView("footballer");
-
-        if (footballer != null && footballer.getTeam() != null && footballer.getTeam().getId() <= 0)
-            footballer.setTeam(null);
-
-        PostOperation(footballer, url + "update/");
-
-        Footballer object = restTemplate.getForObject(getoneUrl, Footballer.class);
-        model.addObject("teams", ((List<Team>)(restTemplate.getForObject(teamurl, List.class))));
-
-        model.addObject("name", name);
-
-        model.addObject("footballerobj", object);
-        return model;
+        return re;
     }
 
 
 
-    public ResponseEntity PostOperation(Footballer footballer, String url) {
+    private ResponseEntity PostOperation(Footballer footballer, String url) {
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
 
-        HttpEntity<String> request = new HttpEntity<>(footballer.toString(), headers);
+        HttpEntity<Footballer> request = new HttpEntity<>(footballer, headers);
 
         ResponseEntity entity = restTemplate.exchange(url, HttpMethod.POST, request, new ParameterizedTypeReference<ResponseEntity>() {
         });

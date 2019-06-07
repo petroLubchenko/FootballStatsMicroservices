@@ -30,7 +30,17 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.authorizeRequests().antMatchers("/","/login","/registration").permitAll().and()
+        http
+                .authorizeRequests().antMatchers("/main/**").authenticated()
+                .and()
+                .authorizeRequests().antMatchers("/teams/**").authenticated()
+                .and()
+                .authorizeRequests().antMatchers("/footballers/**").authenticated()
+                .and()
+                .authorizeRequests().antMatchers("/championships/**").authenticated()
+                .and()
+                .authorizeRequests().antMatchers("/","/login","/registration").permitAll()
+                .and()
                 .authorizeRequests().antMatchers("/admin").hasRole("ADMIN")
                 .and()
                 .formLogin()
@@ -39,6 +49,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .permitAll()
                 .and()
                 .logout().permitAll();
+
 
         http.csrf().disable();
     }
