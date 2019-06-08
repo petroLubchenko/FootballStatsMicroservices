@@ -183,10 +183,9 @@ public class ChampionshipController {
 
     @GetMapping("/{id}/teams/remove/{tid}")
     public ModelAndView removeTeam(@PathVariable long id, @PathVariable long tid) throws IOException {
-        String footballerurl = "http://footballer-team-server:8100/teams/";
-        Team f = restTemplate.getForObject(footballerurl + id, Team.class);
+        Team f = restTemplate.getForObject(teamurl + tid, Team.class);
         if (f == null)
-            return new ModelAndView("redirect:/championships/" + tid + "/footballers");
+            return new ModelAndView("redirect:/championships/" + id + "/teams");
 
         f.setChampionship(null);
 
@@ -195,8 +194,8 @@ public class ChampionshipController {
         Team ff = new ObjectMapper().readValue(s, Team.class);
 
         System.out.println(f.toString());
-        PostOperation(ff, footballerurl + "update/");
-        return new ModelAndView("redirect:/championships/" + tid + "/teams");
+        PostOperation(ff, teamurl + "update/");
+        return new ModelAndView("redirect:/championships/" + id + "/teams");
 
     }
 

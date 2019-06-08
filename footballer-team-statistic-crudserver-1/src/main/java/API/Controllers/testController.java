@@ -11,7 +11,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -22,16 +24,28 @@ public class testController {
     @GetMapping("/inf")
     public String getProps(){
         Map<String, Object> props = new HashMap<>();
-        CompositePropertySource bootstrapProps = (CompositePropertySource) ((AbstractEnvironment) env).getPropertySources().get("bootstrapProperties");
+        try {
+            List<String> names = new ArrayList<>();
+            ((AbstractEnvironment) env).getPropertySources().iterator().forEachRemaining(p -> names.add(p.getName()));
+            for (String s : names){
+                CompositePropertySource lprops = (CompositePropertySource) ((AbstractEnvironment) env).getPropertySources().get(s);
+                if (lprops != null)
+                    for (String propertName : lprops.getPropertyNames())
+                        props.put(propertName, lprops.getProperty(propertName));
+            }
+        }
+        catch (Exception e){
 
-        for (String propertName : bootstrapProps.getPropertyNames())
-            props.put(propertName, bootstrapProps.getProperty(propertName));
-
-        CompositePropertySource appProps = (CompositePropertySource) ((AbstractEnvironment) env).getPropertySources().get("applicationProperties");
-
-        if (appProps != null)
+        }
+        try {
+            CompositePropertySource appProps = (CompositePropertySource) ((AbstractEnvironment) env).getPropertySources().get("applicationProperties");
             for (String propertName : appProps.getPropertyNames())
                 props.put(propertName, appProps.getProperty(propertName));
+        }
+        catch (Exception e){
+
+        }
+
 
         ObjectMapper mapper = new ObjectMapper();
         mapper.configure(SerializationFeature.INDENT_OUTPUT, true);
