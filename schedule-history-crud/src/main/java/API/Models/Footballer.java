@@ -1,6 +1,10 @@
 package API.Models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
@@ -127,6 +131,19 @@ public class Footballer {
 
         return true;
     }
+    @Override
+    public String toString(){
+        String jsonString = "";
+        ObjectMapper mapper = new ObjectMapper();
+        try {
+            mapper.enable(SerializationFeature.INDENT_OUTPUT);
+            jsonString = mapper.writeValueAsString(this);
+        }
+        catch (JsonProcessingException ex){
+            ex.printStackTrace();
+        }
+        return jsonString;
+    }
 
 
     // Getters
@@ -158,6 +175,7 @@ public class Footballer {
         return surname;
     }
 
+    @JsonIgnore
     public Team getTeam() {
         return team;
     }

@@ -1,9 +1,13 @@
 package API.Models;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
 
 import javax.persistence.*;
 import java.util.Objects;
+import java.util.UUID;
 
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
@@ -15,6 +19,33 @@ public class Team {
     private String city;
     private String stadiumname;
     private boolean deleted;
+    private int points;
+    private int scored;
+    private int concended;
+
+    public int getPoints() {
+        return points;
+    }
+
+    public void setPoints(int points) {
+        this.points = points;
+    }
+
+    public int getScored() {
+        return scored;
+    }
+
+    public void setScored(int scored) {
+        this.scored = scored;
+    }
+
+    public int getConcended() {
+        return concended;
+    }
+
+    public void setConcended(int concended) {
+        this.concended = concended;
+    }
 
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private Championship championship;
@@ -74,6 +105,19 @@ public class Team {
                         Objects.equals(this.seasonscount, ((Team) object).seasonscount);
 
         return false;
+    }
+    @Override
+    public String toString(){
+        String jsonString = "";
+        ObjectMapper mapper = new ObjectMapper();
+        try {
+            mapper.enable(SerializationFeature.INDENT_OUTPUT);
+            jsonString = mapper.writeValueAsString(this);
+        }
+        catch (JsonProcessingException ex){
+            ex.printStackTrace();
+        }
+        return jsonString;
     }
 
 

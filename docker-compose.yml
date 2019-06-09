@@ -72,6 +72,7 @@ services:
   consumerservice:
     image: "footballer-team-statistic/message-consumer"
     container_name: messageconsumer
+    hostname: ps
     depends_on:
       - psdocker
     networks: 
@@ -124,10 +125,30 @@ services:
     depends_on:
       - eurekaserver
       - configserver
-    networks: 
+    networks:
       - kafkanet
     ports:
       - 8100:8100
+    links:
+      - eurekaserver
+      - kafkaserver
+    environment:
+      - DATABASE_HOST=psdocker
+      - DATABASE_NAME=labdef
+      - DATABASE_PORT=5432
+      - HOST_NAME=eurekaserver
+      - eureka.client.serviceUrl.defaultZone=http://eurekaserver:8761/eureka/
+  matchservice:
+    image: "footballer-team-statistic/matchcrud:latest"
+    container_name: matchservice
+    hostname: services
+    depends_on:
+      - eurekaserver
+      - configserver
+    networks:
+      - kafkanet
+    ports:
+      - 8200:8200
     links:
       - eurekaserver
       - kafkaserver

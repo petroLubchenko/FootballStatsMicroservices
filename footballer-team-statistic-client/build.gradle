@@ -42,6 +42,8 @@ dependencyManagement {
 }
 
 dependencies {
+// https://mvnrepository.com/artifact/org.springframework.security/spring-security-taglibs
+    compile group: 'org.springframework.security', name: 'spring-security-taglibs', version: '5.1.5.RELEASE'
 // https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-tomcat
     compile group: 'org.springframework.boot', name: 'spring-boot-starter-tomcat', version: '2.1.5.RELEASE'
 // https://mvnrepository.com/artifact/javax.servlet/jstl

@@ -1,29 +1,18 @@
-package API.Models;
+package API.footballstats.client.Models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import org.hibernate.annotations.Generated;
-import org.hibernate.annotations.GenerationTime;
-import org.hibernate.annotations.GenericGenerator;
-import org.hibernate.annotations.SortNatural;
 import org.springframework.cloud.client.loadbalancer.LoadBalanced;
 import org.springframework.web.client.RestTemplate;
 
 import javax.persistence.*;
 import java.util.UUID;
 
-@Entity
-@Table(name = "match")
 public class Match {
     @JsonIgnore
-    @Transient
-    @LoadBalanced
     private static RestTemplate restTemplate = new RestTemplate();
     @JsonIgnore
-    @Transient
     private String teamUrl = "http://services:8100/teams/";
 
-    @Id
-    @GeneratedValue
     private UUID id;
     private long homeTeam;
     private long awayTeam;

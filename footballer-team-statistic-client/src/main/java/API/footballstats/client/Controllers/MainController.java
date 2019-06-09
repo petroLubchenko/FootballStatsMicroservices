@@ -1,9 +1,13 @@
 package API.footballstats.client.Controllers;
 
 import API.footballstats.client.Models.Authorities;
+import API.footballstats.client.Models.Message;
 import API.footballstats.client.Models.User;
 import API.footballstats.client.Security.AuthService;
 import API.footballstats.client.Security.RoleService;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.bouncycastle.math.raw.Mod;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -11,6 +15,11 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.client.RestTemplate;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 @Controller
 public class MainController {
@@ -19,6 +28,8 @@ public class MainController {
 
     @Autowired
     RoleService roleService;
+
+    private RestTemplate restTemplate = new RestTemplate();
 
     @RequestMapping(path = "/", method = RequestMethod.GET)
     public String Index(Model model, String error, String logout){
@@ -56,4 +67,21 @@ public class MainController {
     public String main(){
         return "mainpage";
     }
+
+    @GetMapping("/admin")
+    public String userlist(Model model){
+        List<Authorities> authorities = roleService.findAll();
+        model.addAttribute("users", authorities);
+        return "users";
+    }
+
+    @GetMapping("/admin/logs")
+    public String logs(Model model) throws IOException {
+        ObjectMapper mapper = new ObjectMapper();
+        List<Message> messages = mapper.readValue(mapper.writeValueAsString(restTemplate.getForObject("http://ps:9001/", List.class)), (new ArrayList<Message>()).getClass());
+        model.addAttribute("messages", messages);
+
+        return "messages";
+    }
+
 }

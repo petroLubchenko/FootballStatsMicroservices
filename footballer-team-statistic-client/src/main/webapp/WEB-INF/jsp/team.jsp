@@ -52,6 +52,13 @@
                    value="${team.seasonscount}"/>
         </div>
         <div class="card-heading p-2">
+            Count of points: ${team.points}
+            <br>
+            <input class="form-control"
+                   name="points"
+                   value="${team.points}"/>
+        </div>
+        <div class="card-heading p-2">
             Championship:
             <select NAME="championship">
                 <option value="=0, = , = }"></option>

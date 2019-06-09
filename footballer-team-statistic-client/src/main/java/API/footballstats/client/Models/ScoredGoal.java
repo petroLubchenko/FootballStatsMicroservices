@@ -1,13 +1,12 @@
-package API.Models;
+package API.footballstats.client.Models;
 
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 
-@Entity
-@Table(name = "goal")
 public class ScoredGoal {
-    @Id
     private long id;
-    @ManyToOne(targetEntity = Match.class)
     private Match match;
     private short minute;
 

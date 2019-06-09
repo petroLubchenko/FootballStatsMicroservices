@@ -33,4 +33,24 @@ public class ConsumedMessage {
         this.object = object;
         this.error = error;
     }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public HttpMethod getHttpMethod() {
+        return httpMethod;
+    }
+
+    public int getHttpStatus() {
+        return httpStatus;
+    }
+
+    public String getObject() {
+        return object;
+    }
+
+    public String getError() {
+        return error;
+    }
 }

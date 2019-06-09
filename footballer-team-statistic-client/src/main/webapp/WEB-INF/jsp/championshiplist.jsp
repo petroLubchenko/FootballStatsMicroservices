@@ -69,7 +69,7 @@
                     <div>
                         <a type="button" class="btn" href="/championships/${championship.id}" style="margin-right: 10px">Edit</a>
                         <a type="button" class="btn" href="/championships/delete/${championship.id}" >Delete</a>
-                        <a type="button" class="btn" href="/championships/${championship.id}/teams" >Work with subjecs</a>
+                        <a type="button" class="btn" href="/championships/${championship.id}/teams" >Team list</a>
                     </div>
                 </td>
             </tr>

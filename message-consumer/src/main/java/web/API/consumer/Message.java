@@ -17,6 +17,13 @@ public class Message {
 
     }
 
+    public Message(String description, HttpMethod httpMethod, int httpStatus, String object, String error) {
+        this.description = description;
+        this.httpMethod = httpMethod;
+        this.httpStatus = httpStatus;
+        this.object = object;
+        this.error = error;
+    }
 
     public String getObject() {
         return object;

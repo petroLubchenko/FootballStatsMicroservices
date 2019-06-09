@@ -30,7 +30,7 @@ sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
 bootJar {
-    baseName = 'tfccrud1'
+    baseName = 'matchcrud'
     version =  '0.1.0'
 }
 

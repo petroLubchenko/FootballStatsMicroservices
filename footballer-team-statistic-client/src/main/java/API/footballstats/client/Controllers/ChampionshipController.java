@@ -8,6 +8,7 @@ import API.footballstats.client.Exceptions.ServiceIsUnavailable;
 import API.footballstats.client.Models.Championship;
 import API.footballstats.client.Models.Message;
 import API.footballstats.client.Models.Team;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +26,8 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Properties;
 
@@ -64,8 +67,9 @@ public class ChampionshipController {
         producer = new KafkaProducer<String, String>(producerProperties);
     }
 
-    private String url = "http://footballer-team-server:8100/championships/";
-    private String teamurl = "http://footballer-team-server:8100/teams/";
+    private String url = "http://footballer-team-server/championships/";
+    private String teamurl = "http://footballer-team-server/teams/";
+    private String matchurl = "http://match-history-service/";
 
     @GetMapping("/")
     public String getAll(Model model) throws IOException {
@@ -171,12 +175,20 @@ public class ChampionshipController {
     }
 
     @GetMapping("/{id}/teams")
-    public String getChTeams(@PathVariable long id, Model model){
+    public String getChTeams(@PathVariable long id, Model model) throws IOException {
+        ObjectMapper mapper = new ObjectMapper();
         List<Team> teams = restTemplate.getForObject(url + id + "/teams", List.class);
+
         if (teams == null)
             return "teamsch";
 
-        model.addAttribute("teams", teams);
+        List<Team> realteams = new ArrayList<>();
+
+        for (Object t : teams)
+            realteams.add(mapper.readValue(mapper.writeValueAsString(t), Team.class));
+
+        realteams.sort(Comparator.reverseOrder());
+        model.addAttribute("teams", realteams);
         model.addAttribute("championship", (Championship)restTemplate.getForObject(url + id, Championship.class));
         return  "teamsch";
     }
@@ -196,6 +208,24 @@ public class ChampionshipController {
         System.out.println(f.toString());
         PostOperation(ff, teamurl + "update/");
         return new ModelAndView("redirect:/championships/" + id + "/teams");
+
+    }
+
+    @GetMapping("/{id}/teams/{tid}/match")
+    public String matchMake(@PathVariable long id, @PathVariable long tid Model model) throws IOException {
+        Team f = restTemplate.getForObject(teamurl + tid, Team.class);
+       /* if (f == null)
+            return new ModelAndView("redirect:/championships/" + id + "/teams");*/
+
+        f.setChampionship(null);
+
+        String s = f.toString();
+
+        Team ff = new ObjectMapper().readValue(s, Team.class);
+
+        System.out.println(f.toString());
+        PostOperation(ff, teamurl + "update/");
+        return "matchcreate";
 
     }
 
