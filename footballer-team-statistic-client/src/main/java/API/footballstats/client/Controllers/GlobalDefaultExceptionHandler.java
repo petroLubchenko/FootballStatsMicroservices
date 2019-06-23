@@ -8,11 +8,11 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 
-@ControllerAdvice
+//@ControllerAdvice
 class GlobalDefaultExceptionHandler {
     public static final String DEFAULT_ERROR_VIEW = "error";
 
-    @ExceptionHandler(value = Exception.class)
+    /*@ExceptionHandler(value = Exception.class)
     public ModelAndView defaultErrorHandler(HttpServletRequest req, Exception e) throws Exception {
         // If the exception is annotated with @ResponseStatus rethrow it and let
         // the framework handle it - like the OrderNotFoundException example
@@ -23,10 +23,10 @@ class GlobalDefaultExceptionHandler {
             throw e;
 
         // Otherwise setup and send the user to a default error-view.
-        ModelAndView mav = new ModelAndView("error");
+        ModelAndView mav = new ModelAndView("WEB-INF/jsp/error.jsp");
         mav.addObject("exception", e);
         mav.addObject("url", req.getRequestURL());
-        mav.setViewName("error");
+        mav.setViewName("WEB-INF/jsp/error.jsp");
         return mav;
-    }
+    }*/
 }

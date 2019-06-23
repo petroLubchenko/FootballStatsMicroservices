@@ -37,7 +37,7 @@
                             <input type="text" name="name" class="form-control" id="name">
                         </div>
                         <div class="form-group">
-                            <label for="city" class="col-form-label">Abbreviated name:</label>
+                            <label for="city" class="col-form-label">City:</label>
                             <input type="text" name="city" class="form-control" id="city">
                         </div>
                         <div class="form-group">

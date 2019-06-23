@@ -46,6 +46,7 @@
                 <td>
                     <div>
                         <a type="button" class="btn btn-danger" href="/championships/${championship.id}/teams/remove/${e.id}" >Remove</a>
+                        <a type="button" class="btn btn-primary" href="/championships/${championship.id}/teams/${e.id}/match" >Create match</a>
                     </div>
                 </td>
             </tr>

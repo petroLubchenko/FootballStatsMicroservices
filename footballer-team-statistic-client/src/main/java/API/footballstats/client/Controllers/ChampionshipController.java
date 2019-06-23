@@ -6,6 +6,7 @@ import API.footballstats.client.Exceptions.InadmissiblefieldsException;
 import API.footballstats.client.Exceptions.InternalServerErrorException;
 import API.footballstats.client.Exceptions.ServiceIsUnavailable;
 import API.footballstats.client.Models.Championship;
+import API.footballstats.client.Models.Match;
 import API.footballstats.client.Models.Message;
 import API.footballstats.client.Models.Team;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -26,10 +27,7 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Properties;
+import java.util.*;
 
 @Controller
 @RequestMapping("/championships")
@@ -212,23 +210,47 @@ public class ChampionshipController {
     }
 
     @GetMapping("/{id}/teams/{tid}/match")
-    public String matchMake(@PathVariable long id, @PathVariable long tid Model model) throws IOException {
+    public String matchMake(@PathVariable long id, @PathVariable long tid, Model model) throws IOException {
         Team f = restTemplate.getForObject(teamurl + tid, Team.class);
-       /* if (f == null)
-            return new ModelAndView("redirect:/championships/" + id + "/teams");*/
+        ObjectMapper mapper = new ObjectMapper();
+        if (f == null)
+            return "redirect:/championships/" + id + "/teams";
 
-        f.setChampionship(null);
-
-        String s = f.toString();
-
-        Team ff = new ObjectMapper().readValue(s, Team.class);
+        Team ff = mapper.readValue(mapper.writeValueAsString(f), Team.class);
 
         System.out.println(f.toString());
-        PostOperation(ff, teamurl + "update/");
-        return "matchcreate";
+        Match match = new Match();
+        match.setHomeTeam(ff.getId());
+        model.addAttribute("match", match);
 
+        List<Object> objects = restTemplate.getForObject(url + id + "/teams", List.class);
+        List<Team> teams = new ArrayList<>();
+        for (Object o : objects)
+        {
+            Team tt = mapper.readValue(mapper.writeValueAsString(o), Team.class);
+            if (tt.getId() != ff.getId())
+                teams.add(tt);
+        }
+
+        model.addAttribute("teams", teams);
+        return "matchcreate";
     }
 
+    @PostMapping("/match")
+    public  String playMatch(@ModelAttribute Match match, Model model) throws IOException {
+        ObjectMapper mapper = new ObjectMapper();
+        ResponseEntity<Match> entity = PostOperation(match, matchurl);
+        Match match1 = mapper.readValue(mapper.writeValueAsString(entity.getBody()), Match.class);
+
+        Match match2 = mapper.readValue(
+                mapper.writeValueAsString(
+                        PostOperation(match1, matchurl + match1.getId() + "/generate").getBody()
+                ),
+                Match.class);
+
+        model.addAttribute("match", match2);
+        return "champmatch";
+    }
 
     private ResponseEntity PostOperation(Championship championship, String url) {
 
@@ -250,6 +272,31 @@ public class ChampionshipController {
             message = new Message("Operation of insert/update unsuccessful", HttpMethod.POST, entity.getStatusCode(), championship, entity.getBody().toString());
             Application.sendKafkaMessage(message.toString(), producer, topicName);
         }
+
+
+        return entity;
+    }
+    private ResponseEntity<Match> PostOperation(Match match, String url) {
+
+        HttpHeaders headers = new HttpHeaders();
+        //if (match != null)
+        headers.setContentType(MediaType.APPLICATION_JSON);
+
+        HttpEntity<Match> request = new HttpEntity<>(match, headers);
+
+        ResponseEntity<Match> entity = restTemplate.exchange(url, HttpMethod.POST, request, new ParameterizedTypeReference<Match>() {
+        });
+
+        Message message;
+
+        /*if (entity.getStatusCode().is2xxSuccessful())
+        {
+            message = new Message("Operation of insert/update successful", HttpMethod.POST, entity.getStatusCode(), match, "");
+            Application.sendKafkaMessage(message.toString(), producer, topicName);
+        } else {
+            message = new Message("Operation of insert/update unsuccessful", HttpMethod.POST, entity.getStatusCode(), match, entity.getBody().toString());
+            Application.sendKafkaMessage(message.toString(), producer, topicName);
+        }*/
 
 
         return entity;

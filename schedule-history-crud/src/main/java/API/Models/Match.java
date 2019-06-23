@@ -69,20 +69,20 @@ public class Match {
         this.id = id;
     }
 
-    @JsonIgnore
+    /*@JsonIgnore
     public Team getHomeTeamObj() {
         return homeTeam != 0 ? restTemplate.getForObject(teamUrl + homeTeam, Team.class) : null;
-    }
+    }*/
 
     public void setHomeTeam(Team homeTeam) {
         this.homeTeam = homeTeam.getId();
         homeGoals = 0;
     }
 
-    @JsonIgnore
-    public Team getAwayTeamObj() {
+    //@JsonIgnore
+    /*public Team getAwayTeamObj() {
         return awayTeam != 0 ? restTemplate.getForObject(teamUrl + awayTeam, Team.class) : null;
-    }
+    }*/
 
     public void setAwayTeam(Team awayTeam) {
         this.awayTeam = awayTeam.getId();

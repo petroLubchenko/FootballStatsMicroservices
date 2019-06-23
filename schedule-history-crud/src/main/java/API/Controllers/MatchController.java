@@ -10,6 +10,7 @@ import API.Repositories.MatchRepository;
 import API.Repositories.ScoredGoalRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cloud.client.loadbalancer.LoadBalanced;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.*;
 import org.springframework.stereotype.Controller;
@@ -37,9 +38,10 @@ public class MatchController {
     private RestTemplate restTemplate;
 
     @Autowired
-    public MatchController(MatchRepository matchRepository, ScoredGoalRepository goalRepository) {
+    public MatchController(MatchRepository matchRepository, ScoredGoalRepository goalRepository/*, RestTemplate restTemplate*/) {
         this.matchRepository = matchRepository;
         this.goalRepository = goalRepository;
+        //this.restTemplate = restTemplate;
     }
 
     @GetMapping("")
@@ -89,9 +91,9 @@ public class MatchController {
         Match match = optionalMatch.get();
         if (match.isPlayed())
             throw new InAdmissibleFieldsException("Match is already played");
-        if (match.getHomeTeamObj() == null)
+        if (match.getHomeTeam() == 0)
             throw new InAdmissibleFieldsException("Home team does not exist");
-        if (match.getAwayTeamObj() == null)
+        if (match.getAwayTeam() == 0)
             throw new InAdmissibleFieldsException("Away team does not exist");
         generateMatch(match);
 
@@ -121,15 +123,26 @@ public class MatchController {
     private void generateMatch(Match match) throws IOException {
         if (match.isPlayed())
             return;
+
+        ObjectMapper mapper = new ObjectMapper();
+
         Random r = new Random();
         for (short i = 0; i < 90; i++){
             int val = r.nextInt(100);
             if (val < 5){
                 if (val < 3) {
-                    generateGoal(match.getHomeTeamObj(), match, i, r);
+                    generateGoal(mapper.readValue(
+                            mapper.writeValueAsString(
+                                    restTemplate.getForObject(teamUrl + match.getHomeTeam(), Team.class)
+                            ), Team.class
+                    ), match, i, r);
                     match.setHomeGoals(match.getHomeGoals() + 1);
                 } else {
-                    generateGoal(match.getAwayTeamObj(), match, i, r);
+                    generateGoal(mapper.readValue(
+                            mapper.writeValueAsString(
+                                    restTemplate.getForObject(teamUrl + match.getAwayTeam(), Team.class)
+                            ), Team.class
+                    ), match, i, r);
                     match.setAwayGoals(match.getAwayGoals() + 1);
                 }
             }

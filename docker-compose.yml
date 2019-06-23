@@ -141,7 +141,7 @@ services:
   matchservice:
     image: "footballer-team-statistic/matchcrud:latest"
     container_name: matchservice
-    hostname: services
+    hostname: services2
     depends_on:
       - eurekaserver
       - configserver
