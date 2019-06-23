@@ -3,19 +3,19 @@ spring:
     stream:
       kafka:
         binder:
-          brokers: "localhost:9092"
+          brokers: "kafkaserver:9092"
 
 server:
-  port: 0
+  port: 8090
 
-#zuul:
-  #routes:
-#    product-manager:
-#      path: "/**/products**"
-#      strip-prefix: false
-#    customer-manager:
-#      path: "/customers**"
-#      strip-prefix: false
+zuul:
+  routes:
+    footballer-team-server:
+      path: "/**/footballer-team-server**"
+      strip-prefix: false
+    teamstat-client:
+      path: "/teamstat-client**"
+      strip-prefix: false
 
 eureka:
   client:

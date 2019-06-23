@@ -51,6 +51,7 @@ public class Application {
 }
 
 @RestController
+@RequestMapping("/service")
 class ServiceInstanceRestController {
     @Value("${kafka.topic.ftc}")
     private String ftcTopicName;

@@ -5,7 +5,6 @@ import API.Controllers.Exceptions.InternalServerException;
 import API.Controllers.Exceptions.NotFoundException;
 import API.Models.Footballer;
 import API.Services.FootballerService;
-import com.sun.deploy.net.HttpResponse;
 import jdk.net.SocketFlow;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;

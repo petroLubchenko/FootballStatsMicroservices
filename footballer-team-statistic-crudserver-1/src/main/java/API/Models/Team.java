@@ -1,5 +1,10 @@
 package API.Models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonSubTypes;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import org.hibernate.annotations.ManyToAny;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 
 import javax.persistence.*;
@@ -11,6 +16,7 @@ import java.util.Objects;
 
 @Entity
 @Table(name = "TEAM")
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class Team {
 
     @Id
@@ -25,7 +31,39 @@ public class Team {
     private String city;
     @Column(name = "TEAM_STADIUMNAME")
     private String stadiumname;
+    @JsonIgnore
     private boolean deleted;
+    private int points;
+    private int scored;
+    private int concended;
+
+    public int getPoints() {
+        return points;
+    }
+
+    public void setPoints(int points) {
+        this.points = points;
+    }
+
+    public int getScored() {
+        return scored;
+    }
+
+    public void setScored(int scored) {
+        this.scored = scored;
+    }
+
+    public int getConcended() {
+        return concended;
+    }
+
+    public void setConcended(int concended) {
+        this.concended = concended;
+    }
+
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    @ManyToOne(cascade = CascadeType.REMOVE, optional = true, targetEntity = Championship.class)
+    private Championship championship;
 
     public Team(){
         super();
@@ -130,5 +168,13 @@ public class Team {
     }
     public boolean getDeleted(){
         return deleted;
+    }
+
+    public Championship getChampionship() {
+        return championship;
+    }
+
+    public void setChampionship(Championship championship) {
+        this.championship = championship;
     }
 }

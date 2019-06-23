@@ -1,17 +1,36 @@
 package API.footballstats.client.Models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 
+import javax.persistence.CascadeType;
+import javax.persistence.ManyToOne;
 import java.util.Objects;
 
-public class Team {
+@JsonInclude(JsonInclude.Include.NON_NULL)
+public class Team implements Comparable<Team> {
     private long id;
     private String name;
     private int seasonscount;
     private String city;
     private String stadiumname;
+    private int points;
+    private int scored;
+    private int concended;
+    private boolean deleted;
+
+    public boolean isDeleted() {
+        return deleted;
+    }
+
+    public void setDeleted(boolean deleted) {
+        this.deleted = deleted;
+    }
+
+    private Championship championship;
 
     public Team(){
         super();
@@ -93,6 +112,10 @@ public class Team {
         return stadiumname;
     }
 
+    public Championship getChampionship() {
+        return championship;
+    }
+
     public void setId(long id) {
         this.id = id;
     }
@@ -113,4 +136,44 @@ public class Team {
         this.stadiumname = stadiumname;
     }
 
+    public void setChampionship(Championship championship) {
+        this.championship = championship;
+    }
+
+    public int getPoints() {
+        return points;
+    }
+
+    public void setPoints(int points) {
+        this.points = points;
+    }
+
+    public int getScored() {
+        return scored;
+    }
+
+    public void setScored(int scored) {
+        this.scored = scored;
+    }
+
+    public int getConcended() {
+        return concended;
+    }
+
+    public void setConcended(int concended) {
+        this.concended = concended;
+    }
+
+    @Override
+    public int compareTo(Team o) {
+        if (points > o.getPoints())
+            return 1;
+        if (points < o.getPoints())
+            return -1;
+        if (scored > o.getScored())
+            return 1;
+        if (scored < o.getScored())
+            return -1;
+        return 0;
+    }
 }
